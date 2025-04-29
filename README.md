@@ -137,4 +137,7 @@ Cara kerja untuk bagian melihat daftar semua pesanan, yaitu
 
 Screenshot `./dispatcher -list` : 
 
+![Image](https://github.com/user-attachments/assets/234a66ad-580c-4988-b424-782ca46eb59e)
+
+Kendala : Tidak terdapat kendala dalam mengerjakan soal. 
 
