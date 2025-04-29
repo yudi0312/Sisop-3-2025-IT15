@@ -14,7 +14,7 @@
 typedef struct {
     char name[MAX_NAME];
     char address[MAX_ADDRESS];
-    char type[10]; // Express / Reguler
+    char type[10]; 
     int is_delivered;
     char agent_name[MAX_NAME];
 } Order;
@@ -28,8 +28,6 @@ void load_orders(Order *orders) {
 
     char line[512];
     int index = 0;
-
-    // Lewati baris header
     fgets(line, sizeof(line), file);
 
     while (fgets(line, sizeof(line), file) && index < MAX_ORDERS) {
@@ -63,7 +61,6 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    // Jika pertama kali, load data ke shared memory
     static int loaded = 0;
     if (orders[0].name[0] == '\0') {
         load_orders(orders);
@@ -109,7 +106,6 @@ int main(int argc, char *argv[]) {
                     orders[i].is_delivered = 1;
                     strcpy(orders[i].agent_name, getenv("USER") ? getenv("USER") : "Unknown");
 
-                    // Catat log
                     FILE *log = fopen("delivery.log", "a");
                     if (log) {
                         time_t now = time(NULL);
