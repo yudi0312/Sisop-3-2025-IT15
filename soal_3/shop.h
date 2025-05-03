@@ -1,10 +1,12 @@
+#ifndef SHOP_H
+#define SHOP_H
+
 #include <stdio.h>
 #include <string.h>
 
-#ifndef SHOP_H
-#define SHOP_H
 #define MAX_WEAPONS 6
 #define MAX_INVENTORY 10
+
 struct Weapon {
     char name[64];
     int price;
@@ -12,16 +14,16 @@ struct Weapon {
     char passive[128];
 };
 
-struct Weapon shopWeapons[MAX_WEAPONS] = {
+static struct Weapon shopWeapons[MAX_WEAPONS] = {
     {"Crowbar", 50, 10, ""},
     {"Meowmere", 150, 25, ""},
     {"Buster sword", 200, 35, ""},
-    {"High-Frequency blade", 99, 20, "+10% memikat hati perempuan"},
+    {"High-Frequency blade", 99, 20, "+10% insta kill"},
     {"Moonlight greatsword", 300, 50, ""},
-    {"Kusabimaru", 400, 55, "+999% ghosting"}
+    {"Kusabimaru", 400, 55, "+30% crit chance"}
 };
 
-void showShop(char *buffer) {
+static void showShop(char *buffer) {
     strcpy(buffer, "=== Weapon Shop ===\n");
     for (int i = 0; i < MAX_WEAPONS; i++) {
         char line[256];
@@ -37,7 +39,7 @@ void showShop(char *buffer) {
     strcat(buffer, "\n\x1b[33mChoose weapon number to buy: \x1b[0m");
 }
 
-int buyWeapon(int index, int *gold, struct Weapon *inventory, int *inventoryCount) {
+static int buyWeapon(int index, int *gold, struct Weapon *inventory, int *inventoryCount) {
     if (index < 0 || index >= MAX_WEAPONS) return 0;
     if (*inventoryCount >= MAX_INVENTORY) return -2;
     struct Weapon weapon = shopWeapons[index];
@@ -48,6 +50,5 @@ int buyWeapon(int index, int *gold, struct Weapon *inventory, int *inventoryCoun
     *gold -= weapon.price;
     return 1;
 }
-
 
 #endif
