@@ -8,7 +8,7 @@ Anggota kelompok :
 ---
 
 ## Soal 1 - 'Rootkids'
-Author Az Zahrra Tasya Adelia (5027241087)
+Author : Putu Yudi Nandanjaya Wiraguna (5027241080)
 
 ### Deskripsi
 Author diberikan tugas untuk membuat sistem RPC server-client untuk mengubah text file sehingga bisa dilihat dalam bentuk file jpeg.
@@ -188,7 +188,8 @@ sempat beberapa kali gagal dalam deckrip dan download file text. dan juga ada er
 
 ## Soal 2 - RushGo
 
-Author : Putu Yudi Nandanjaya Wiraguna (5027241080)
+> Soal ini ada revisi pada bagian `./dispatcher -list`
+Author : Az Zahrra Tasya Adelia (5027241087)
 
 ### Deskripsi
 
@@ -302,7 +303,7 @@ Screenshot `./dispatcher -status [Nama]` :
 
 ![Image](https://github.com/user-attachments/assets/4437880e-0e5c-4d5d-84c4-7f29ee3eafd0)
 
-#### e. Melihat daftar semua pesanan
+#### e. Melihat daftar semua pesanan (revisi)
 
 Untuk memudahkan monitoring, program dispatcher bisa menjalankan perintah list untuk melihat semua order disertai nama dan statusnya.
 Penggunaan:
@@ -318,9 +319,9 @@ Cara kerja untuk bagian melihat daftar semua pesanan, yaitu
 
 Screenshot `./dispatcher -list` : 
 
-![Image](https://github.com/user-attachments/assets/234a66ad-580c-4988-b424-782ca46eb59e)
+![image](https://github.com/user-attachments/assets/7bb747fd-71df-40c7-8509-db922861bac5)
 
-Kendala : Tidak terdapat kendala dalam mengerjakan soal. 
+Kendala : Pada bagian `./dispatcher -list`, ketika program `./delivery_agent` dijalankan output dari `./dispatcher -list` hanya pending saja semua. 
 
 ---
 
