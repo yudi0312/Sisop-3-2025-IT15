@@ -5,14 +5,186 @@ Anggota kelompok :
 - Naruna Vicranthyo Putra Gangga	5027241105
 - Az Zahrra Tasya Adelia	        5027241087
 
+---
 
 ## Soal 1 - 'Rootkids'
 Author Az Zahrra Tasya Adelia (5027241087)
 
 ### Deskripsi
+Author diberikan tugas untuk membuat sistem RPC server-client untuk mengubah text file sehingga bisa dilihat dalam bentuk file jpeg.
+- `image_server.c` sebagai program yang berjalan pada latar belakang
+- `iamge_client.c` sebagai menu atau mengirim request ke `image_Server.c`
+---
+### a. download/unzip file yang terdapat pada soal
+
+download file dan unzip file tersebut. selanjutnya, memperlihatkan working directory:
+
+![WhatsApp Image 2025-05-08 at 16 42 37_fe6ed71d](https://github.com/user-attachments/assets/611adfe7-be0c-49aa-b458-8c6bfa666f47)
+
+### b. Pada `image_server.c`, program yang dibuat harus berjalan secara daemon di background dan terhubung dengan `image_client.c` melalui socket RPC.
+
+```
+void daemonize() {
+    pid_t pid = fork(); // Fork process
+    if (pid > 0) exit(EXIT_SUCCESS); // Parent process exit
+
+    setsid(); // Membuat session ID baru
+    chdir("/path/server/"); // Mengubah working directory
+    close(STDIN_FILENO); // Menutup file descriptor standar
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+}
+
+int main() {
+    daemonize(); // Memanggil fungsi daemonize
+    // Loop utama server
+    while (1) { ... }
+}
+
+```
+- Loop while (1) menjaga server tetap aktif meskipun ada error.
+
+### c. Program image_client.c harus bisa terhubung dengan image_server.c dan bisa mengirimkan perintah untuk:
+- Decrypt text file yang dimasukkan dengan cara Reverse Text lalu Decode from Hex, untuk disimpan dalam folder database server dengan nama file berupa timestamp dalam bentuk angka
+- Request download dari database server sesuai filename yang dimasukkan:
+
+![WhatsApp Image 2025-05-08 at 16 48 34_50e11bcb](https://github.com/user-attachments/assets/cb0b3ab5-ff1f-4e90-8178-3e607aafc38c)
+
+1. Decrypt 
+(client)
+```
+// Mengirim perintah DECRYPT ke server
+snprintf(request, sizeof(request), "DECRYPT %s", text);
+send(sock, request, strlen(request), 0);
+```
+
+(server)
+```
+if (strncmp(buffer, "DECRYPT ", 8) == 0) {
+    reverse(text_data); // Reverse teks
+    hex_to_bytes(text_data, decoded); // Decode hex ke binary
+    sprintf(filename, "database/%ld.jpeg", now); // Generate timestamp
+    fwrite(decoded, 1, decoded_len, fp); // Simpan sebagai JPEG
+}
+```
+
+2. Download
+(client)
+```
+// Mengirim perintah DOWNLOAD ke server
+snprintf(request, sizeof(request), "DOWNLOAD %s", filename);
+send(sock, request, strlen(request), 0);
+```
+
+(server)
+```
+if (strncmp(buffer, "DOWNLOAD ", 9) == 0) {
+    // Membaca file dari database dan mengirim ke client
+    FILE *fp = fopen(path, "rb");
+    while ((n = fread(buffer, 1, BUFFER_SIZE, fp)) > 0) {
+        write(new_socket, buffer, n);
+    }
+}
+```
+
+### d. Menu Interaktif pada Client
+disajikan dalam bentuk menu yang memperbolehkan pengguna untuk memasukkan perintah berkali-kali.
+
+![WhatsApp Image 2025-05-08 at 16 43 27_5757f20e](https://github.com/user-attachments/assets/300eae94-fd60-42f7-b4f0-955f965bb23d)
+
+```
+void print_menu() {
+    printf("\n=== MENU ROOTKIDS ===\n");
+    printf("1. Decrypt text file to image\n");
+    printf("2. Download image from server\n");
+    printf("3. Exit\n");
+}
+
+int main() {
+    while (1) { // Loop menu
+        print_menu();
+        scanf("%d", &choice);
+        switch (choice) { ... } // Pilih aksi
+    }
+}
+```
+
+### e. Program dianggap berhasil bila pengguna dapat mengirimkan text file dan menerima sebuah file jpeg yang dapat dilihat isinya. Apakah anda akan berhasil menemukan sosok sang legenda “rootkids”?
+
+berikut contoh dari gambar 'input_1.txt':
+
+![image](https://github.com/user-attachments/assets/3f00bbd0-a6b7-4682-8518-e6a8e7bb0eee)
 
 
+Server:
+```
+// Menyimpan hasil dekripsi sebagai binary (JPEG)
+FILE *fp = fopen(filename, "wb");
+fwrite(decoded, 1, decoded_len, fp);
+```
 
+Client:
+```
+// Menyimpan file hasil download sebagai binary
+FILE *fp = fopen(filepath, "wb");
+fwrite(response, 1, bytes_received, fp);
+```
+-File disimpan dalam mode binary (wb/rb), sehingga format JPEG tetap valid.
+
+### f. eror handling
+
+- Gagal Koneksi (image_client.c):
+```
+if (connect(sock, ...) < 0) {
+    perror("Connection failed");
+}
+```
+
+- File Input Tidak Ditemukan (image_client.c):
+```
+FILE *fp = fopen(fullpath, "r");
+if (!fp) printf("Error: Text file not found.\n");
+```
+
+- File Tidak Ditemukan di Server (image_server.c):
+```
+FILE *fp = fopen(path, "rb");
+if (!fp) write(new_socket, "ERROR: File not found\n", 23);
+```
+
+contoh output untuk eror handling ketika salah input nama file text:
+
+![WhatsApp Image 2025-05-08 at 16 59 17_867dfc59](https://github.com/user-attachments/assets/9972bbd3-c52e-410d-8f16-de2d85268c22)
+
+### g. Logging
+Server menyimpan log semua percakapan antara image_server.c dan image_client.c di dalam file server.log dengan format:
+
+![image](https://github.com/user-attachments/assets/07c8e175-9b80-4713-ad00-20400379d903)
+
+berikut hasil output pada server.log:
+
+![WhatsApp Image 2025-05-08 at 16 43 52_8e90f370](https://github.com/user-attachments/assets/4228724d-36bf-4d53-a9bd-7d34942d1910)
+
+```
+void write_log(const char *source, const char *action, const char *info) {
+    // Format: [Source][Timestamp]: [ACTION] [Info]
+    fprintf(log, "[%s][%s]: [%s] [%s]\n", source, timestamp, action, info);
+}
+
+// Contoh penggunaan log:
+write_log("Client", "DECRYPT", "Text data received");
+write_log("Server", "SAVE", "1744399397.jpeg");
+```
+
+kendala: 
+
+![Screenshot 2025-05-03 230525](https://github.com/user-attachments/assets/63972790-77cc-4e69-a52d-0ac5e7ca939a)
+
+![Screenshot 2025-05-03 010757](https://github.com/user-attachments/assets/198e6d2e-80a8-44fb-9771-04af0d8948d9)
+
+sempat beberapa kali gagal dalam deckrip dan download file text. dan juga ada eror pada connecting to RPC. 
+
+---
 
 ## Soal 2 - RushGo
 
@@ -149,6 +321,8 @@ Screenshot `./dispatcher -list` :
 ![Image](https://github.com/user-attachments/assets/234a66ad-580c-4988-b424-782ca46eb59e)
 
 Kendala : Tidak terdapat kendala dalam mengerjakan soal. 
+
+---
 
 ## Soal 4 - Sung Jin Woo
 
