@@ -51,14 +51,14 @@ int main() {
 ![WhatsApp Image 2025-05-08 at 16 48 34_50e11bcb](https://github.com/user-attachments/assets/cb0b3ab5-ff1f-4e90-8178-3e607aafc38c)
 
 1. Decrypt 
-(client)
+- Client
 ```
 // Mengirim perintah DECRYPT ke server
 snprintf(request, sizeof(request), "DECRYPT %s", text);
 send(sock, request, strlen(request), 0);
 ```
 
-(server)
+- Server
 ```
 if (strncmp(buffer, "DECRYPT ", 8) == 0) {
     reverse(text_data); // Reverse teks
@@ -69,14 +69,14 @@ if (strncmp(buffer, "DECRYPT ", 8) == 0) {
 ```
 
 2. Download
-(client)
+- Client
 ```
 // Mengirim perintah DOWNLOAD ke server
 snprintf(request, sizeof(request), "DOWNLOAD %s", filename);
 send(sock, request, strlen(request), 0);
 ```
 
-(server)
+- Server
 ```
 if (strncmp(buffer, "DOWNLOAD ", 9) == 0) {
     // Membaca file dari database dan mengirim ke client
