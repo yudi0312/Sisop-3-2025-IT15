@@ -5,6 +5,15 @@ Anggota kelompok :
 - Naruna Vicranthyo Putra Gangga	5027241105
 - Az Zahrra Tasya Adelia	        5027241087
 
+
+## Soal 1 - 'Rootkids'
+Author Az Zahrra Tasya Adelia (5027241087)
+
+### Deskripsi
+
+
+
+
 ## Soal 2 - RushGo
 
 Author : Putu Yudi Nandanjaya Wiraguna (5027241080)
