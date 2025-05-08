@@ -9,7 +9,7 @@
 #define MAX_ORDERS 100
 #define MAX_NAME 100
 #define MAX_ADDRESS 200
-#define SHM_KEY 1234
+#define SHM_KEY 0x12345
 
 typedef struct {
     char name[MAX_NAME];
@@ -28,7 +28,7 @@ void load_orders(Order *orders) {
 
     char line[512];
     int index = 0;
-    fgets(line, sizeof(line), file);
+    fgets(line, sizeof(line), file); // skip header if needed
 
     while (fgets(line, sizeof(line), file) && index < MAX_ORDERS) {
         char *name = strtok(line, ",");
@@ -61,7 +61,6 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    static int loaded = 0;
     if (orders[0].name[0] == '\0') {
         load_orders(orders);
     }
@@ -69,7 +68,6 @@ int main(int argc, char *argv[]) {
     if (argc == 2 && strcmp(argv[1], "-list") == 0) {
         for (int i = 0; i < MAX_ORDERS; i++) {
             if (strlen(orders[i].name) == 0) continue;
-            if (strcmp(orders[i].name, "nama") == 0) continue;
 
             if (orders[i].is_delivered) {
                 printf("%s - Delivered by %s\n", orders[i].name, orders[i].agent_name);
