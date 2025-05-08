@@ -189,6 +189,7 @@ sempat beberapa kali gagal dalam deckrip dan download file text. dan juga ada er
 ## Soal 2 - RushGo
 
 > Soal ini ada revisi pada bagian `./dispatcher -list`
+
 Author : Az Zahrra Tasya Adelia (5027241087)
 
 ### Deskripsi
